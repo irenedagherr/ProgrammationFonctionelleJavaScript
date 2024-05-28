@@ -2,17 +2,17 @@ import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
 import logger from "koa-logger";
-import {getTotalExpensesByCategory, loadConfig} from "./src/db.js";
-import { expensesResume} from "./src/db.js";
-import { expensesDb } from "./src/data.js";
-import { _addExpenses } from "./src/data.js";
-import { categories } from "./src/data.js";
+import { getTotalExpensesByCategory, loadConfig, expensesResume } from "./src/db.js";
+import { expensesDb, _addExpenses, loadExpenses } from "./src/data.js";
 
 const app = new Koa();
 const router = new Router();
 
 app.use(logger());
 app.use(cors());
+
+// Load expenses from file on server start
+loadExpenses();
 
 // Define routes
 router.get("/", (ctx) => {
@@ -23,13 +23,11 @@ router.get("/", (ctx) => {
         '- <a href="http://localhost:2000/addExpenses">/Generate Expenses</a>',
         '- <a href="http://localhost:2000/expensesResume">/Expenses Categorisation</a>',
         '- <a href="http://localhost:2000/get-total-expenses">/Get Total Expenses</a>',
-
     ].join("<br>");
 });
 
 // Define route handlers
 router.get("/expensesResume", (ctx) => {
-    // Assuming expensesDb is defined or imported from elsewhere
     const vali = expensesResume(expensesDb);
     ctx.body = {
         status: "success",
@@ -38,7 +36,6 @@ router.get("/expensesResume", (ctx) => {
 });
 
 router.get("/get-total-expenses", (ctx) => {
-    // Assuming expensesDb is defined or imported from elsewhere
     const irenu = getTotalExpensesByCategory(expensesDb);
     ctx.body = {
         status: "success",
@@ -48,8 +45,7 @@ router.get("/get-total-expenses", (ctx) => {
 
 // Define route handlers
 router.get("/addExpenses", (ctx) => {
-    // Assuming expensesDb is defined or imported from elsewhere
-    const gab = _addExpenses(20,expensesDb);
+    const gab = _addExpenses(20);
     ctx.body = {
         status: "success",
         expenses: gab

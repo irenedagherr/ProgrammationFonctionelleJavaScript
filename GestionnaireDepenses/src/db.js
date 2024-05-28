@@ -1,10 +1,13 @@
-import * as R from "ramda";
-import { expensesDb,categories } from "./data.js";
+import * as R from 'ramda';
+import { expensesDb, categories, saveExpenses } from './data.js';
 
 // Fonction pour ajouter une dépense à la base de données
-const addExpense = (amount, category) =>
-    R.append({ amount, category }, expensesDb);
-
+const addExpense = (amount, category) => {
+    const newExpense = { amount, category };
+    expensesDb.push(newExpense);
+    saveExpenses();
+    return newExpense;
+};
 
 // Function to get total expenses by category and overall total
 const getTotalExpensesByCategory = R.pipe(
@@ -19,10 +22,8 @@ const getTotalExpensesByCategory = R.pipe(
     categories => R.assoc('Total', R.sum(R.values(categories)), categories)
 );
 
-
 const expensesResume = (Database) => {
-
-  const Database2 = R.addIndex(R.map)((expense, index) => {
+    const Database2 = R.addIndex(R.map)((expense, index) => {
         return {
             expenseNumber: index + 1,
             amount: expense.amount,
@@ -31,9 +32,7 @@ const expensesResume = (Database) => {
     }, Database);
 
     return R.sortBy(R.prop('category'), Database2);
-
 };
-
 
 const loadConfig = async () => {
     try {
@@ -46,8 +45,6 @@ const loadConfig = async () => {
         console.error("Error loading config:", error);
     }
 };
-
-
 
 export {
     loadConfig,
