@@ -6,13 +6,18 @@ const addExpense = (amount, category) =>
     R.append({ amount, category }, expensesDb);
 
 
-// Fonction pour obtenir le total des dépenses d'une catégorie spécifique
-const getTotalExpensesByCategory = (Database) =>
-    R.pipe(
-        R.filter(expense => R.includes(expense.category, categories)),
-        R.pluck('amount'),
-        R.sum
-    )(Database);
+// Function to get total expenses by category and overall total
+const getTotalExpensesByCategory = R.pipe(
+    // Step 1: Group by category
+    R.groupBy(R.prop('category')),
+    // Step 2: Map over each category group to sum the amounts
+    R.map(R.pipe(
+        R.pluck('amount'), // Extract amounts
+        R.sum // Sum the amounts
+    )),
+    // Step 3: Compute the total sum and include it in the result
+    categories => R.assoc('Total', R.sum(R.values(categories)), categories)
+);
 
 
 const expensesResume = (Database) => {
