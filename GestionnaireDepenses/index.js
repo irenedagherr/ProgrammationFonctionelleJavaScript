@@ -2,10 +2,11 @@ import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
 import logger from "koa-logger";
-import { loadConfig } from "./src/db.js";
+import {getTotalExpensesByCategory, loadConfig} from "./src/db.js";
 import { expensesResume} from "./src/db.js";
 import { expensesDb } from "./src/data.js";
-
+import { _addExpenses } from "./src/data.js";
+import { categories } from "./src/data.js";
 
 const app = new Koa();
 const router = new Router();
@@ -17,29 +18,41 @@ app.use(cors());
 router.get("/", (ctx) => {
     ctx.type = "html";
     ctx.body = [
-        "Usable routes :",
+        "$ We spent some MONEY : $",
         "",
-        'GET <a href="http://localhost:2000/expensesResume">/expensesResume</a>',
-        'GET <a href="http://localhost:2000/get-total-expenses">/get-total-expenses</a>',
+        '- <a href="http://localhost:2000/addExpenses">/Generate Expenses</a>',
+        '- <a href="http://localhost:2000/expensesResume">/Expenses Resume</a>',
+        '- <a href="http://localhost:2000/get-total-expenses">/Get Total Expenses</a>',
+
     ].join("<br>");
 });
 
 // Define route handlers
 router.get("/expensesResume", (ctx) => {
     // Assuming expensesDb is defined or imported from elsewhere
-    const expensesResumes = expensesResume(expensesDb);
+    const vali = expensesResume(expensesDb);
     ctx.body = {
         status: "success",
-        expenses: expensesResumes
+        expenses: vali
     };
 });
 
 router.get("/get-total-expenses", (ctx) => {
     // Assuming expensesDb is defined or imported from elsewhere
-    const totalCoursesExpenses = getTotalExpensesByCategory(expensesDb, "courses");
+    const irenu = getTotalExpensesByCategory(expensesDb, "courses");
     ctx.body = {
         status: "success",
-        totalExpenses: totalCoursesExpenses
+        totalExpenses: irenu
+    };
+});
+
+// Define route handlers
+router.get("/addExpenses", (ctx) => {
+    // Assuming expensesDb is defined or imported from elsewhere
+    const gab = _addExpenses(20,expensesDb);
+    ctx.body = {
+        status: "success",
+        expenses: gab
     };
 });
 
