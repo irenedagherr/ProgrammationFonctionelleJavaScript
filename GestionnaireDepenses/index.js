@@ -21,7 +21,7 @@ router.get("/", (ctx) => {
         "$ We spent some MONEY : $",
         "",
         '- <a href="http://localhost:2000/addExpenses">/Generate Expenses</a>',
-        '- <a href="http://localhost:2000/expensesResume">/Expenses Resume</a>',
+        '- <a href="http://localhost:2000/expensesResume">/Expenses Categorisation</a>',
         '- <a href="http://localhost:2000/get-total-expenses">/Get Total Expenses</a>',
 
     ].join("<br>");
@@ -39,7 +39,7 @@ router.get("/expensesResume", (ctx) => {
 
 router.get("/get-total-expenses", (ctx) => {
     // Assuming expensesDb is defined or imported from elsewhere
-    const irenu = getTotalExpensesByCategory(expensesDb, "courses");
+    const irenu = getTotalExpensesByCategory(expensesDb);
     ctx.body = {
         status: "success",
         totalExpenses: irenu

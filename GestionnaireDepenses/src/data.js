@@ -1,9 +1,9 @@
 let expensesDb = [
-    { amount: 50, category: "courses" },
+    { amount: 50, category: "groceries" },
     { amount: 22, category: "sport" },
-    { amount: 35, category: "courses" },
+    { amount: 35, category: "groceries" },
     { amount: 10, category: "transport" },
-    { amount: 15, category: "entertainment" }
+    { amount: 15, category: "leisure" }
 ];
 
 

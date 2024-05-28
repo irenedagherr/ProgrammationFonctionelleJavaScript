@@ -1,33 +1,32 @@
 import * as R from "ramda";
-import { expensesDb } from "./data.js";
+import { expensesDb,categories } from "./data.js";
 
 // Fonction pour ajouter une dépense à la base de données
 const addExpense = (amount, category) =>
     R.append({ amount, category }, expensesDb);
 
-// Fonction pour obtenir toutes les dépenses d'une catégorie spécifique
-const getExpensesByCategory = (category) => {
-    const filteredExpenses = R.filter(R.propSatisfies(cat => cat.toLowerCase() === category.toLowerCase(), "category"), expensesDb);
-    console.log("Base de données après le filtrage :", filteredExpenses);
-    return filteredExpenses;
-};
 
 // Fonction pour obtenir le total des dépenses d'une catégorie spécifique
-const getTotalExpensesByCategory = (category) =>
+const getTotalExpensesByCategory = (Database) =>
     R.pipe(
-        getExpensesByCategory,
-        R.pluck("amount"),
+        R.filter(expense => R.includes(expense.category, categories)),
+        R.pluck('amount'),
         R.sum
-    )(category);
+    )(Database);
 
-const expensesResume = () => {
-    console.log("Summary of Expenses:");
-    R.addIndex(R.forEach)((expense, index) => {
-        console.log(`Expense ${index + 1}:`);
-        console.log(`Amount: ${expense.amount}`);
-        console.log(`Category: ${expense.category}`);
-        console.log("-----------------------------");
-    }, expensesDb);
+
+const expensesResume = (Database) => {
+
+  const Database2 = R.addIndex(R.map)((expense, index) => {
+        return {
+            expenseNumber: index + 1,
+            amount: expense.amount,
+            category: expense.category
+        };
+    }, Database);
+
+    return R.sortBy(R.prop('category'), Database2);
+
 };
 
 
@@ -48,7 +47,6 @@ const loadConfig = async () => {
 export {
     loadConfig,
     addExpense,
-    getExpensesByCategory,
     getTotalExpensesByCategory,
     expensesResume
 };
