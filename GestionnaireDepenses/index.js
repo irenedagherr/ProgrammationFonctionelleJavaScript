@@ -2,16 +2,18 @@ import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
 import logger from "koa-logger";
-import { getTotalExpensesByCategory, loadConfig, expensesResume } from "./src/db.js";
+import bodyParser from "koa-bodyparser";
+import { getTotalExpensesByCategory, loadConfig, expensesResume, resetExpenses } from "./src/db.js";
 import { expensesDb, _addExpenses, loadExpenses } from "./src/data.js";
+import { addSingleExpense } from "./src/data.js";
 
 const app = new Koa();
 const router = new Router();
 
 app.use(logger());
 app.use(cors());
+app.use(bodyParser());
 
-// Load expenses from file on server start
 loadExpenses();
 
 // Define routes
@@ -20,41 +22,55 @@ router.get("/", (ctx) => {
     ctx.body = [
         "$ We spent some MONEY : $",
         "",
-        '- <a href="http://localhost:2000/addExpenses">/Generate Expenses</a>',
-        '- <a href="http://localhost:2000/expensesResume">/Expenses Categorisation</a>',
-        '- <a href="http://localhost:2000/get-total-expenses">/Get Total Expenses</a>',
+        '- <a href="/addExpenses">Generate Expenses</a>',
+        '- <a href="/expensesResume">Expenses Categorization</a>',
+        '- <a href="/get-total-expenses">Get Total Expenses</a>',
     ].join("<br>");
 });
 
-// Define route handlers
 router.get("/expensesResume", (ctx) => {
-    const vali = expensesResume(expensesDb);
+    const summary = expensesResume(expensesDb);
     ctx.body = {
         status: "success",
-        expenses: vali
+        expenses: summary
     };
 });
 
 router.get("/get-total-expenses", (ctx) => {
-    const irenu = getTotalExpensesByCategory(expensesDb);
+    const totalExpenses = getTotalExpensesByCategory(expensesDb);
     ctx.body = {
         status: "success",
-        totalExpenses: irenu
+        totalExpenses: totalExpenses
     };
 });
 
-// Define route handlers
 router.get("/addExpenses", (ctx) => {
-    const gab = _addExpenses(20);
+    const newExpenses = _addExpenses(20);
     ctx.body = {
         status: "success",
-        expenses: gab
+        expenses: newExpenses
     };
 });
 
-// Use routes and HTTP methods
+router.post("/addSingleExpense", (ctx) => {
+    console.log("Request Body:", ctx.request.body); // Log the request body for debugging
+    const { amount, category } = ctx.request.body;
+    if (!amount || !category) {
+        ctx.status = 400;
+        ctx.body = { status: "error", message: "Amount and category are required." };
+        return;
+    }
+    const newExpense = addSingleExpense(amount, category);
+    ctx.body = { status: "success", expense: newExpense };
+});
+
+router.get("/resetExpenses", (ctx) => {
+    resetExpenses();
+    ctx.body = { status: "success", message: "Expenses reset successfully." };
+});
+
 app.use(router.routes()).use(router.allowedMethods());
 
-// Start the server
-app.listen(2000);
-console.log("Server started on: http://localhost:2000");
+app.listen(2000, () => {
+    console.log("Server started on: http://localhost:2000");
+});

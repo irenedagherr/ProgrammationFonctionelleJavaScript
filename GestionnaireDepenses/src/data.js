@@ -9,13 +9,9 @@ let expensesDb = [
     { amount: 15, category: "leisure" }
 ];
 
-// Categories to choose from
 const categories = ["groceries", "sport", "transport", "leisure"];
-
-// Path to the JSON file
 const DATA_FILE = './data/expenses.json';
 
-// Function to load data from a JSON file
 const loadExpenses = () => {
     if (fs.existsSync(DATA_FILE)) {
         const data = fs.readFileSync(DATA_FILE, 'utf8');
@@ -23,17 +19,15 @@ const loadExpenses = () => {
     }
 };
 
-// Function to save data to a JSON file
 const saveExpenses = () => {
     fs.writeFileSync(DATA_FILE, JSON.stringify(expensesDb, null, 2));
 };
 
-// Function to initialize expenses data
 const _addExpenses = (length) => {
     const newExpenses = R.times(
         () => ({
-            amount: Math.floor(Math.random() * 100) + 1, // Random amount between 1 and 100
-            category: categories[Math.floor(Math.random() * categories.length)] // Random category
+            amount: Math.floor(Math.random() * 100) + 1,
+            category: categories[Math.floor(Math.random() * categories.length)]
         }),
         length
     );
@@ -42,4 +36,13 @@ const _addExpenses = (length) => {
     return newExpenses;
 };
 
-export { expensesDb, _addExpenses, categories, loadExpenses, saveExpenses };
+// src/data.js
+export function addSingleExpense(amount, category) {
+    const newExpense = { id: Date.now(), amount, category };
+    // Assuming expensesDb is an array where you store expenses
+    expensesDb.push(newExpense);
+    return newExpense;
+}
+
+
+export { expensesDb, _addExpenses, categories, loadExpenses, saveExpenses};
