@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Expense Manager</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+<h1>Expenses Manager</h1>
+<br>
+<br>
+<img src="https://media.giphy.com/media/67ThRZlYBvibtdF9JH/giphy.gif" width="480" height="360">
+<p><a href="https://giphy.com/gifs/looneytunes-looney-tunes-bugs-bunny-pay-day-67ThRZlYBvibtdF9JH">via GIPHY</a></p>
+<br>
+<br>
+<div>To optimise the use of our application, we advise you to click on the Expenses Categorisation first. <br>
+    You'll see the expenses that we already have in out database.<Br>
+    Then check the Total Expenses of those.<br>
+    After that, generate new expenses and check both the buttons to see the changes ! </div>
+<br>
+<br>
+
+<a id="addExpensesLink" class="button"  href="#">Generate Expenses</a><br>
+<a id="expensesResumeLink" class="button"  href="#">Expenses Categorization</a><br>
+<a id="getTotalExpensesLink" class="button"  href="#">Get Total Expenses</a><br>
+<form id="addExpenseForm">
+    <label for="amount">Amount:</label>
+    <input type="number" id="amount" name="amount"><br><br>
+
+    <label for="category">Category:</label>
+    <select id="category" name="category">
+        <option value="groceries">Groceries</option>
+        <option value="sport">Sport</option>
+        <option value="transport">Transport</option>
+        <option value="leisure">Leisure</option>
+    </select><br><br>
+
+    <button type="submit">Submit</button>
+</form>
+<button id="resetExpensesButton">Reset Expenses</button>
+<div id="content"></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('addExpensesLink').addEventListener('click', addExpenses);
+        document.getElementById('expensesResumeLink').addEventListener('click', getExpensesResume);
+        document.getElementById('getTotalExpensesLink').addEventListener('click', getTotalExpenses);
+
+        document.getElementById('addExpenseForm').addEventListener('submit', async (event) => {
+            event.preventDefault();
+            const amount = document.getElementById('amount').value;
+            const category = document.getElementById('category').value;
+            const response = await fetch('http://localhost:2000/addSingleExpense', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ amount, category })
+            });
+            const data = await response.json();
+            console.log(data);
+        });
+
+        document.getElementById('resetExpensesButton').addEventListener('click', async () => {
+            const response = await fetch('http://localhost:2000/resetExpenses');
+            const data = await response.json();
+            console.log(data);
+        });
+    });
+
+
+    function addExpenses() {
+        fetch('http://localhost:2000/addExpenses')
+            .then(response => response.json())
+            .then(data => {
+                displayResult(data.expenses);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function getExpensesResume() {
+        fetch('http://localhost:2000/expensesResume')
+            .then(response => response.json())
+            .then(data => {
+                displayResult(data.expenses);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function getTotalExpenses() {
+        fetch('http://localhost:2000/get-total-expenses')
+            .then(response => response.json())
+            .then(data => {
+                displayTotalExpenses(data.totalExpenses);
+            })
+            .catch(error => console.error('Error:', error));
+    }
+
+    function displayResult(expenses) {
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = '<h2>Expenses</h2>';
+        const list = document.createElement('ul');
+        expenses.forEach(expense => {
+            const listItem = document.createElement('li');
+            listItem.textContent = `Expense #${expense.expenseNumber || ''}: ${expense.amount}€ - ${expense.category}`;
+            list.appendChild(listItem);
+        });
+        contentDiv.appendChild(list);
+    }
+
+    function displayTotalExpenses(totalExpenses) {
+        const contentDiv = document.getElementById('content');
+        contentDiv.innerHTML = '<h2>Total Expenses</h2>';
+        const list = document.createElement('ul');
+        for (const [category, total] of Object.entries(totalExpenses)) {
+            const listItem = document.createElement('li');
+            listItem.textContent = `${category}: ${total}€`;
+            list.appendChild(listItem);
+        }
+        contentDiv.appendChild(list);
+    }
+</script>
+</body>
+</html>

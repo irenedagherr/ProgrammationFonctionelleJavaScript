@@ -1,0 +1,129 @@
+/* Reset and basic styles */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f4f4f4;
+    color: #333;
+}
+
+header {
+    background-color: #333;
+    color: white;
+    padding: 20px 0;
+    text-align: center;
+}
+
+h1 {
+    margin: 0;
+}
+
+main {
+    padding: 20px;
+    text-align: center;
+}
+
+.container {
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+nav ul {
+    list-style: none;
+    padding: 0;
+    margin: 20px 0;
+}
+
+nav ul li {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+/* Ajoutez ces styles à votre fichier style.css */
+
+nav ul li a {
+    text-decoration: none;
+    color: #fff; /* couleur du texte */
+    padding: 10px 20px;
+    border-radius: 5px;
+    background-color: #4CAF50; /* couleur de fond professionnelle */
+    transition: background-color 0.3s ease;
+    border: none; /* supprime la bordure */
+    cursor: pointer; /* curseur de la souris */
+}
+
+nav ul li a:hover {
+    background-color: #45a049; /* couleur de fond au survol */
+}
+
+footer {
+    background-color: #333;
+    color: white;
+    text-align: center;
+    padding: 10px 0;
+}
+
+
+/* Ajoutez ces styles à votre fichier style.css */
+
+/* Styles pour les boutons du formulaire */
+#addExpenseForm button{
+    background-color: #4CAF50; /* couleur de fond */
+    color: white; /* couleur du texte */
+    padding: 10px 20px; /* espacement du texte à l'intérieur du bouton */
+    border: none; /* supprime la bordure */
+    border-radius: 5px; /* arrondi les coins */
+    cursor: pointer; /* curseur de la souris */
+    transition: background-color 0.3s; /* effet de transition au survol */
+    margin-top: 10px; /* espacement entre les boutons */
+}
+
+#resetExpensesButton {
+    background-color: #f44336; /* couleur de fond pour le bouton "Reset Expenses" */
+    color: white; /* couleur du texte */
+    padding: 10px 20px; /* espacement du texte à l'intérieur du bouton */
+    border: none; /* supprime la bordure */
+    border-radius: 5px; /* arrondi les coins */
+    cursor: pointer; /* curseur de la souris */
+    transition: background-color 0.3s; /* effet de transition au survol */
+    margin-top: 10px; /* espacement entre les boutons */
+}
+
+
+#resetExpensesButton:hover {
+    background-color: #45a040; /* nouvelle couleur de fond au survol */
+}
+
+#resetExpensesButton:hover {
+    background-color: #d32f2f; /* couleur de fond au survol pour le bouton "Reset Expenses" */
+}
+
+
+#addExpenseForm button:focus,
+#resetExpensesButton:focus {
+    outline: none; /* supprime la bordure de focus */
+}
+
+
+/* style.css */
+
+/* Base styles for the buttons */
+.button {
+    display: inline-block;
+    padding: 10px 20px;
+    margin: 5px;
+    font-size: 16px;
+    text-align: center;
+    text-decoration: none;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    background-color: #4CAF50; /* Green */
+    color: white;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect */
+.button:hover {
+    background-color: #45a049; /* Darker green */
+}
